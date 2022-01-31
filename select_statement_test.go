@@ -3,7 +3,7 @@ package pgsql_test
 import (
 	"testing"
 
-	"github.com/jackc/pgsql"
+	"github.com/mwchambers/pgsql"
 	"github.com/stretchr/testify/assert"
 )
 

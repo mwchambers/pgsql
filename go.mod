@@ -1,4 +1,4 @@
-module github.com/jackc/pgsql
+module github.com/mwchambers/pgsql
 
 go 1.12
 

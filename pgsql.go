@@ -117,9 +117,7 @@ func (wl whereList) WriteSQL(sb *strings.Builder, args *Args) {
 		if i > 0 {
 			sb.WriteString(" and ")
 		}
-		sb.WriteByte('(')
 		expr.WriteSQL(sb, args)
-		sb.WriteByte(')')
 	}
 }
 

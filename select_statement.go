@@ -15,6 +15,7 @@ type SelectStatement struct {
 	whereList whereList
 
 	orderByList []SQLWriter
+	groupByList []SQLWriter
 
 	limit  int64
 	offset int64
@@ -94,6 +95,11 @@ func (ss *SelectStatement) And(s string, args ...interface{}) *SelectStatement {
 
 func (ss *SelectStatement) Order(s string, args ...interface{}) *SelectStatement {
 	ss.orderByList = append(ss.orderByList, &FormatString{s: s, args: args})
+	return ss
+}
+
+func (ss *SelectStatement) GroupBy(s string, args ...interface{}) *SelectStatement {
+	ss.groupByList = append(ss.groupByList, &FormatString{s: s, args: args})
 	return ss
 }
 
@@ -179,6 +185,16 @@ func (ss *SelectStatement) WriteSQL(sb *strings.Builder, args *Args) {
 	}
 
 	ss.whereList.WriteSQL(sb, args)
+
+	if len(ss.groupByList) > 0 {
+		sb.WriteString(" group by ")
+		for i, e := range ss.groupByList {
+			if i > 0 {
+				sb.WriteString(", ")
+			}
+			e.WriteSQL(sb, args)
+		}
+	}
 
 	if len(ss.orderByList) > 0 {
 		sb.WriteString(" order by ")

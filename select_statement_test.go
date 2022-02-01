@@ -21,11 +21,48 @@ func TestFrom(t *testing.T) {
 	assert.Empty(t, args)
 }
 
+func TestFromJoin(t *testing.T) {
+	a := pgsql.Select("u.id, g.name")
+	from := "user as u join group as g on u.group_id = g.id"
+	a.From(from)
+	want := "select u.id, g.name from " + from
+	sql, args := pgsql.Build(a)
+	assert.Equal(t, want, sql)
+	assert.Empty(t, args)
+}
+
+func TestFromJoinSelectAppends(t *testing.T) {
+	a := pgsql.Select("u.id, g.name")
+	from := "user as u join group as g on u.group_id = g.id"
+	a.From(from)
+	a.Select("u.forename")
+	want := "select u.id, g.name, u.forename from " + from
+	sql, args := pgsql.Build(a)
+	assert.Equal(t, want, sql)
+	assert.Empty(t, args)
+}
+
 func TestWhere(t *testing.T) {
 	a := pgsql.Where("id=?", 2).From("people")
 	sql, args := pgsql.Build(a)
 	assert.Equal(t, "select * from people where (id=$1)", sql)
 	assert.Equal(t, []interface{}{2}, args)
+}
+
+func TestWhereBrackets(t *testing.T) {
+	a := pgsql.Where("id=?", 2).From("people")
+	a.Where("b=? OR c=?", 3, 4)
+	sql, args := pgsql.Build(a)
+	assert.Equal(t, "select * from people where (id=$1) and (b=$2 OR c=$3)", sql)
+	assert.Equal(t, []interface{}{2, 3, 4}, args)
+}
+
+func TestAnd(t *testing.T) {
+	a := pgsql.Select("id").From("people").Where("a>?", 2)
+	a.And("b=? OR c=?", false, true)
+	sql, args := pgsql.Build(a)
+	assert.Equal(t, "select id from people where (a>$1) and (b=$2 OR c=$3)", sql)
+	assert.Equal(t, []interface{}{2, false, true}, args)
 }
 
 func TestSelectStatementDistinct(t *testing.T) {

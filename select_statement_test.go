@@ -142,6 +142,18 @@ func TestSelectStatementLimitAndOffset(t *testing.T) {
 	assert.Empty(t, args)
 }
 
+func TestSelectStatementGroupBy(t *testing.T) {
+	a := pgsql.Select("a").From("t").Order("a desc").GroupBy("a")
+	sql, args := pgsql.Build(a)
+	assert.Equal(t, "select a from t group by a order by a desc", sql)
+	assert.Empty(t, args)
+
+	a.GroupBy("b")
+	sql, args = pgsql.Build(a)
+	assert.Equal(t, "select a from t group by a, b order by a desc", sql)
+	assert.Empty(t, args)
+}
+
 func TestSelectStatementApply(t *testing.T) {
 	a := pgsql.Select("a, b, c").From("t").Order("c desc")
 	sql, args := pgsql.Build(a)

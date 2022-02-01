@@ -88,6 +88,10 @@ func (ss *SelectStatement) Where(s string, args ...interface{}) *SelectStatement
 	return ss
 }
 
+func (ss *SelectStatement) And(s string, args ...interface{}) *SelectStatement {
+	return ss.Where(s, args...)
+}
+
 func (ss *SelectStatement) Order(s string, args ...interface{}) *SelectStatement {
 	ss.orderByList = append(ss.orderByList, &FormatString{s: s, args: args})
 	return ss

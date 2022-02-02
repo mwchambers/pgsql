@@ -105,6 +105,19 @@ func TestSelectStatementWhere(t *testing.T) {
 	assert.Equal(t, []interface{}{42}, args)
 }
 
+func TestSelectStatementWhereBadParams(t *testing.T) {
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatalf("There was no panic")
+		}
+		assert.Contains(t, r, "format  OR c=? is missing arg 2")
+	}()
+
+	pgsql.Build(pgsql.From("t").Where("a=?", 1).Where("b=? OR c=?", 10))
+}
+
 func TestSelectStatementOrder(t *testing.T) {
 	a := pgsql.Select("a, b, c").From("t").Order("c desc")
 	sql, args := pgsql.Build(a)

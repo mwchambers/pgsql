@@ -1,6 +1,7 @@
 package pgsql
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -43,6 +44,11 @@ func (a *Args) Format(s string, values ...interface{}) string {
 		}
 
 		b.WriteString(s[0:pos])
+
+		if (len(values) - 1) < i {
+			panic(fmt.Sprintf("format %s is missing arg %d", s, i+1))
+		}
+
 		b.WriteString(a.Use(values[i]).String())
 		s = s[pos+1:]
 	}

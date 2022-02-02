@@ -68,3 +68,7 @@ func (is *InsertStatement) WriteSQL(sb *strings.Builder, args *Args) {
 
 	is.returningList.WriteSQL(sb, args)
 }
+
+func (is *InsertStatement) Build() (string, []interface{}) {
+	return Build(is)
+}

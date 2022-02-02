@@ -48,3 +48,10 @@ func TestInsertStatementReturning(t *testing.T) {
 	assert.Equal(t, "insert into people (age, name) values ($1,$2) returning id", sql)
 	assert.Equal(t, []interface{}{30, "Alice"}, args)
 }
+
+func TestInsertStatementBuildChain(t *testing.T) {
+	data := pgsql.RowMap{"name": "Alice", "age": 30}
+	sql, args := pgsql.Insert("people").Data(data).Build()
+	assert.Equal(t, "insert into people (age, name) values ($1,$2)", sql)
+	assert.Equal(t, []interface{}{30, "Alice"}, args)
+}

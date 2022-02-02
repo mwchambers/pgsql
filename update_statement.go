@@ -86,3 +86,7 @@ func (us *UpdateStatement) Apply(others ...*SelectStatement) *UpdateStatement {
 
 	return us
 }
+
+func (us *UpdateStatement) Build() (string, []interface{}) {
+	return Build(us)
+}

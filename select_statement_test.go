@@ -209,3 +209,11 @@ func TestSelectStatementApplyReplaceOrder(t *testing.T) {
 	assert.Equal(t, "select a, b, c from t order by a desc, d", sql)
 	assert.Empty(t, args)
 }
+
+func TestSelectStatementBuildChain(t *testing.T) {
+	sql, args := pgsql.Select("a, b, c").From("t").Where("a > ?", 42).Build()
+
+	assert.Equal(t, "select a, b, c from t where (a > $1)", sql)
+
+	assert.Equal(t, []interface{}{42}, args)
+}

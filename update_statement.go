@@ -52,6 +52,15 @@ func (us *UpdateStatement) Where(s string, args ...interface{}) *UpdateStatement
 	return us
 }
 
+func (us *UpdateStatement) WhereEqual(rows RowMap) *UpdateStatement {
+	keys := rows.sortedKeys()
+
+	for _, k := range keys {
+		us.whereList = append(us.whereList, &equalityExpr{rawSQL(k), Param{rows[k]} })
+	}
+	return us
+}
+
 func (us *UpdateStatement) Returning(s string, args ...interface{}) *UpdateStatement {
 	us.returningList = append(us.returningList, &FormatString{s: s, args: args})
 	return us

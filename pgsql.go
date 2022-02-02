@@ -41,6 +41,18 @@ func Build(ab SQLWriter) (string, []interface{}) {
 	return sb.String(), args.Values()
 }
 
+type equalityExpr struct {
+	left  SQLWriter
+	right SQLWriter
+}
+
+func (ee *equalityExpr) WriteSQL(sb *strings.Builder, args *Args) {
+	ee.left.WriteSQL(sb, args)
+	sb.WriteByte('=')
+	ee.right.WriteSQL(sb, args)
+}
+
+
 type binaryExpr struct {
 	left  SQLWriter
 	op    string

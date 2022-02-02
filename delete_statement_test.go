@@ -42,3 +42,9 @@ func TestDeleteStatementApply(t *testing.T) {
 	assert.Equal(t, `delete from people where (foo=$1) and (bar=$2)`, sql)
 	assert.Equal(t, []interface{}{43, 7}, args)
 }
+
+func TestDeleteStatementBuildChain(t *testing.T) {
+	sql, args := pgsql.Delete("people").Where("foo=?", 43).Build()
+	assert.Equal(t, `delete from people where (foo=$1)`, sql)
+	assert.Equal(t, []interface{}{43}, args)
+}

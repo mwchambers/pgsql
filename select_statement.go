@@ -215,3 +215,7 @@ func (ss *SelectStatement) WriteSQL(sb *strings.Builder, args *Args) {
 		sb.WriteString(strconv.FormatInt(ss.offset, 10))
 	}
 }
+
+func (ss *SelectStatement) Build() (string, []interface{}) {
+	return Build(ss)
+}

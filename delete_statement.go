@@ -42,3 +42,7 @@ func (ds *DeleteStatement) Apply(others ...*SelectStatement) *DeleteStatement {
 
 	return ds
 }
+
+func (ds *DeleteStatement) Build() (string, []interface{}) {
+	return Build(ds)
+}
